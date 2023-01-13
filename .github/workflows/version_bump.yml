@@ -1,0 +1,48 @@
+name: s390x version bump
+
+# This workflow pulls the latest official actions runner version using GH API
+# and update our s390x Dockerfile.
+# If a change happens, the change will be commited in a versioned branch and
+# a PR will be created. Upon merging, the branch will be deleted.
+#
+# The workflow can be triggered manually (workflow_dispatch) but also runs nightly
+# before the nightly rebuild.
+on:
+  schedule:
+    - cron: '00 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get latest runner release
+        id: release
+        run: |
+          ACTIONS_VERSION=$(curl -L https://api.github.com/repos/actions/runner/releases/latest | jq -r '.name[1:]')
+          if [ "${ACTIONS_VERSION}" == "null" ]
+          then
+            echo "::error Invalid ACTIONS_VERSION ${ACTIONS_VERSION}"
+            exit 1
+          fi
+          echo "ACTIONS_VERSION=${ACTIONS_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Update release
+        id: bump
+        run: sed -i 's#^ARG version=.*#ARG version=${{ steps.release.outputs.ACTIONS_VERSION}}#' s390x.Dockerfile
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
+          commit-message: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
+          branch: "version-bump/${{ steps.release.outputs.ACTIONS_VERSION}}"
+          delete-branch: true
+          body: ""
+          team-reviewers: kernel-patches/meta-ci-reviewers
