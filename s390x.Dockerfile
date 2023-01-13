@@ -50,8 +50,6 @@ WORKDIR ${homedir}
 RUN curl -L https://github.com/actions/runner/releases/download/v${version}/actions-runner-linux-x64-${version}.tar.gz | tar -xz
 USER root
 
-VOLUME ${homedir}
-
 # WARNING: This needs to be set at the end of the file or it will have side effects when building the container
 # from within a foreign arch (like building on x86 host).
 # amd64 dependencies.
