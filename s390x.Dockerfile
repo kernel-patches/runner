@@ -32,7 +32,7 @@ RUN apt-get update && apt-get -y install \
         iputils-ping
 
 # amd64 Github Actions Runner.
-ARG version=2.299.1
+ARG version=2.301.1
 ARG homedir=/actions-runner
 # Copy scripts from  myoung34/docker-github-actions-runner
 RUN curl -L https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${version}/entrypoint.sh -o /entrypoint.sh && chmod 755 /entrypoint.sh
