@@ -1,5 +1,5 @@
 # hadolint ignore=DL3007
-FROM myoung34/github-runner:latest
+FROM myoung34/github-runner:2.301.1
 LABEL maintainer="sunyucong@gmail.com"
 
 RUN apt-get update \
