@@ -45,4 +45,4 @@ jobs:
           branch: "version-bump/${{ steps.release.outputs.ACTIONS_VERSION}}"
           delete-branch: true
           body: ""
-          team-reviewers: kernel-patches/meta-ci-reviewers
+          reviewers: anakryiko, chantra, danielocfb
