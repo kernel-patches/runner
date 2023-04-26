@@ -22,6 +22,7 @@ RUN apt-get update && apt-get -y install \
         git \
         jq \
         linux-image-generic \
+        python3 \
         qemu-system-s390x \
         rsync \
         software-properties-common \
