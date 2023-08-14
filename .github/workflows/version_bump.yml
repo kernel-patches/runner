@@ -45,4 +45,4 @@ jobs:
           branch: "version-bump/${{ steps.release.outputs.ACTIONS_VERSION}}"
           delete-branch: true
           body: ""
-          reviewers: anakryiko, chantra, danielocfb
+          reviewers: anakryiko, chantra, danielocfb, yurinnick
