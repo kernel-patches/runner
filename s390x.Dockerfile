@@ -23,14 +23,14 @@ RUN apt-get update && apt-get -y install \
         jq \
         linux-image-generic \
         python3 \
-        qemu-system-s390x \
         rsync \
         software-properties-common \
         sudo \
         tree \
         zstd \
         iproute2 \
-        iputils-ping
+        iputils-ping && \
+    apt-get install -y cpu-checker qemu-kvm qemu-utils qemu-system-x86 qemu-system-s390x qemu-system-arm qemu-guest-agent ethtool keyutils iptables gawk
 
 # amd64 Github Actions Runner.
 ARG version=2.311.0
