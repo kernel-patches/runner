@@ -1,14 +1,14 @@
 # Self-Hosted IBM Z Github Actions Runner.
 ARG UBUNTU_VERSION=focal
 # Temporary image: amd64 dependencies.
-FROM amd64/ubuntu:${UBUNTU_VERSION} as ld-prefix
+FROM --platform=linux/amd64 ubuntu:${UBUNTU_VERSION} AS ld-prefix
 # Redefining UBUNTU_VERSION without a value inherits the global default
 ARG UBUNTU_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get -y install ca-certificates && if [ ${UBUNTU_VERSION} = "focal" ]; then apt-get -y install libicu66 libssl1.1; else apt-get -y install libicu74 libssl3t64; fi
 
 # Main image.
-FROM s390x/ubuntu:${UBUNTU_VERSION}
+FROM --platform=linux/s390x ubuntu:${UBUNTU_VERSION}
 
 # Packages for libbpf testing that are not installed by .github/actions/setup.
 ENV DEBIAN_FRONTEND=noninteractive
