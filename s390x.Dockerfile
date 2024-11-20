@@ -1,7 +1,7 @@
 # Self-Hosted IBM Z Github Actions Runner.
 ARG UBUNTU_VERSION=focal
-# Temporary image: amd64 dependencies.
-FROM --platform=linux/amd64 ubuntu:${UBUNTU_VERSION} AS ld-prefix
+# Temporary image: arm64 dependencies.
+FROM --platform=linux/aarch64 ubuntu:${UBUNTU_VERSION} AS ld-prefix
 # Redefining UBUNTU_VERSION without a value inherits the global default
 ARG UBUNTU_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
@@ -50,7 +50,7 @@ RUN usermod -a -G kvm runner
 USER runner
 ENV USER=runner
 WORKDIR ${homedir}
-RUN curl -L https://github.com/actions/runner/releases/download/v${version}/actions-runner-linux-x64-${version}.tar.gz | tar -xz
+RUN curl -L https://github.com/actions/runner/releases/download/v${version}/actions-runner-linux-arm64-${version}.tar.gz | tar -xz
 USER root
 
 # WARNING: This needs to be set at the end of the file or it will have side effects when building the container
@@ -58,10 +58,10 @@ USER root
 # amd64 dependencies.
 # More specifically this is setting QEMU_LD_PREFIX that causes issue, but before touching system
 # files, we may as well finish any prior installs.
-COPY --from=ld-prefix / /usr/x86_64-linux-gnu/
-RUN ln -fs ../lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /usr/x86_64-linux-gnu/lib64/
-RUN ln -fs /etc/resolv.conf /usr/x86_64-linux-gnu/etc/
-ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
+COPY --from=ld-prefix / /usr/aarch64-linux-gnu/
+RUN ln -fs ../lib/aarch64-linux-gnu/ld-linux-aarch64.so.2 /usr/aarch64-linux-gnu/
+RUN ln -fs /etc/resolv.conf /usr/aarch64-linux-gnu/etc/
+ENV QEMU_LD_PREFIX=/usr/aarch64-linux-gnu
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["./bin/Runner.Listener", "run", "--startuptype", "service"]
