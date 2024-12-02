@@ -35,7 +35,7 @@ RUN apt-get update && apt-get -y install \
     apt-get install -y cpu-checker qemu-kvm qemu-utils qemu-system-x86 qemu-system-s390x qemu-system-arm qemu-guest-agent ethtool keyutils iptables gawk
 
 # amd64 Github Actions Runner.
-ARG version=2.321.0
+ARG version=2.320.0
 ARG homedir=/actions-runner
 # Copy scripts from  myoung34/docker-github-actions-runner
 RUN curl -L https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${version}/entrypoint.sh -o /entrypoint.sh && chmod 755 /entrypoint.sh
@@ -62,9 +62,6 @@ COPY --from=ld-prefix / /usr/x86_64-linux-gnu/
 RUN ln -fs ../lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /usr/x86_64-linux-gnu/lib64/
 RUN ln -fs /etc/resolv.conf /usr/x86_64-linux-gnu/etc/
 ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
-# mitigates .NET 8 crash in qemu emulation
-# see https://gitlab.com/qemu-project/qemu/-/issues/2600
-ENV DOTNET_EnableWriteXorExecute=0
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["./bin/Runner.Listener", "run", "--startuptype", "service"]
