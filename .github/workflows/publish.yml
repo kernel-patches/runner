@@ -39,7 +39,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        ubuntu_version: [focal, noble]
+        ubuntu_version: [noble]
         arch: [s390x, aarch64, x86_64]
         include:
           - arch: s390x
@@ -93,14 +93,14 @@ jobs:
             prefix=
             suffix=-${{ matrix.ubuntu_version }}-${{ matrix.arch }}
           tags: |
-            # Generate old tag names (e.g main-s390x, main-x86_64...) when building focal
+            # Generate old tag names (e.g main-s390x, main-x86_64...) when building noble
             # branch event
-            type=ref,enable=${{ matrix.ubuntu_version == 'focal' }},suffix=-${{ matrix.arch }},event=branch
+            type=ref,enable=${{ matrix.ubuntu_version == 'noble' }},suffix=-${{ matrix.arch }},event=branch
             # pr event
-            type=ref,enable=${{ matrix.ubuntu_version == 'focal' }},prefix=pr-,suffix=-${{ matrix.arch }},event=pr
+            type=ref,enable=${{ matrix.ubuntu_version == 'noble' }},prefix=pr-,suffix=-${{ matrix.arch }},event=pr
             # tags for all pr/branches
             type=ref,event=branch,enable=true,priority=600
-            type=ref,event=pr,enable=true,prefix=pr-,priority=600          
+            type=ref,event=pr,enable=true,prefix=pr-,priority=600
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
