@@ -43,7 +43,7 @@ jobs:
         arch: [s390x, aarch64, x86_64]
         include:
           - arch: s390x
-            dockerfile: s390x.Dockerfile
+            dockerfile: s390x-native.Dockerfile
             platform: linux/s390x
           - arch: aarch64
             dockerfile: Dockerfile
