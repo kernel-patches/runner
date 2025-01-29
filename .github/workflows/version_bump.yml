@@ -35,13 +35,13 @@ jobs:
 
       - name: Update release
         id: bump
-        run: sed -i 's#^ARG version=.*#ARG version=${{ steps.release.outputs.ACTIONS_VERSION}}#' s390x.Dockerfile
+        run: sed -i 's#^ARG RUNNER_VERSION=.*#ARG RUNNER_VERSION=${{ steps.release.outputs.ACTIONS_VERSION}}#' s390x.Dockerfile
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
-          commit-message: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
+          title: "[automated] s390x: bump RUNNER_VERSION to v${{ steps.release.outputs.ACTIONS_VERSION}}"
+          commit-message: "[automated] s390x: bump RUNNER_VERSION to v${{ steps.release.outputs.ACTIONS_VERSION}}"
           branch: "version-bump/${{ steps.release.outputs.ACTIONS_VERSION}}"
           delete-branch: true
           body: ""
