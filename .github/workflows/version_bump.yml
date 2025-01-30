@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get latest runner release
         id: release
@@ -38,11 +38,11 @@ jobs:
         run: sed -i 's#^ARG version=.*#ARG version=${{ steps.release.outputs.ACTIONS_VERSION}}#' s390x.Dockerfile
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           title: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
           commit-message: "[automated] Bumping s390x containers to action-runners v${{ steps.release.outputs.ACTIONS_VERSION}}"
           branch: "version-bump/${{ steps.release.outputs.ACTIONS_VERSION}}"
           delete-branch: true
           body: ""
-          reviewers: anakryiko, chantra, danielocfb, yurinnick
+          reviewers: anakryiko, chantra, danielocfb, yurinnick, theihor
