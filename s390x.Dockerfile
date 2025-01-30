@@ -14,7 +14,7 @@ RUN apt-get install -y \
     aspnetcore-runtime-8.0
 RUN apt-get clean
 
-ARG version=2.321.0
+ARG version=2.322.0
 ARG homedir=/actions-runner
 
 # Copy scripts from  myoung34/docker-github-actions-runner
