@@ -5,8 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get -y install \
     bc bison cmake cpu-checker curl dumb-init ethtool flex gawk git \
-    iproute2 iptables iputils-ping jq keyutils linux-image-generic \
-    python3 rsync software-properties-common sudo tree wget zstd
+    iproute2 iptables iputils-ping jq keyutils python3 rsync \
+    software-properties-common sudo tree wget zstd
 RUN apt-get -y install \
     qemu-guest-agent qemu-kvm qemu-utils \
     qemu-system-arm qemu-system-s390x qemu-system-x86
