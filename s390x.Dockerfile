@@ -35,7 +35,7 @@ RUN apt-get update && apt-get -y install \
     apt-get install -y cpu-checker qemu-kvm qemu-utils qemu-system-x86 qemu-system-s390x qemu-system-arm qemu-guest-agent ethtool keyutils iptables gawk
 
 # amd64 Github Actions Runner.
-ARG version=2.320.0
+ARG version=2.322.0
 ARG homedir=/actions-runner
 # Copy scripts from  myoung34/docker-github-actions-runner
 RUN curl -L https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${version}/entrypoint.sh -o /entrypoint.sh && chmod 755 /entrypoint.sh
