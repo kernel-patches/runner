@@ -3,15 +3,23 @@ ARG UBUNTU_VERSION=noble
 FROM --platform=linux/s390x ubuntu:${UBUNTU_VERSION}
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get -y install \
-    bc bison cmake cpu-checker curl dumb-init ethtool flex gawk git \
-    iproute2 iptables iputils-ping jq keyutils linux-image-generic \
-    python3 rsync software-properties-common sudo tree wget zstd
-RUN apt-get -y install \
-    qemu-guest-agent qemu-kvm qemu-utils \
-    qemu-system-arm qemu-system-s390x qemu-system-x86
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
+    bc bison build-essential cmake cpu-checker curl dumb-init elfutils ethtool flex g++ gawk git \
+    iproute2 iptables iputils-ping jq keyutils libguestfs-tools python3-minimal python3-docutils \
+    rsync software-properties-common sudo tree wget xz-utils zstd
+
+RUN apt-get update -y && apt-get install -y \
+    binutils-dev libcap-dev libdw-dev libelf-dev libssl-dev ncurses-dev
+
+RUN apt-get update -y && apt-get install -y \
+    qemu-guest-agent qemu-kvm qemu-system-arm qemu-system-s390x qemu-system-x86 qemu-utils
+
+# Install LLVM with automatic script (https://apt.llvm.org)
+RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
+RUN apt-get update -y && apt-get install -y \
     aspnetcore-runtime-8.0
+
 RUN apt-get clean
 
 ARG version=2.321.0
