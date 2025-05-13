@@ -20,4 +20,6 @@ RUN apt-get update -y && apt-get install -y \
 # Install LLVM with automatic script (https://apt.llvm.org)
 RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
+COPY token.sh /token.sh
+
 RUN apt-get clean

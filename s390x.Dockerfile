@@ -64,7 +64,9 @@ RUN apt-get clean
 
 # Copy scripts from myoung34/docker-github-actions-runner
 RUN curl -Lf https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${RUNNER_VERSION}/entrypoint.sh -o /entrypoint.sh && chmod 755 /entrypoint.sh
-RUN curl -Lf https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${RUNNER_VERSION}/token.sh -o /token.sh && chmod 755 /token.sh
+
+# RUN curl -Lf https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${RUNNER_VERSION}/token.sh -o /token.sh && chmod 755 /token.sh
+COPY token.sh /token.sh
 
 RUN useradd -d ${RUNNER_HOME} -m runner
 RUN echo "runner ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
