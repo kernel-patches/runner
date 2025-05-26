@@ -1,13 +1,13 @@
 # Self-Hosted IBM Z Github Actions Runner
 
-ARG RUNNER_VERSION=2.323.0
+ARG RUNNER_VERSION=2.324.0
 
 FROM ubuntu:noble AS build-s390x-runner-binaries
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG S390X_RUNNER_REPO="https://github.com/anup-kodlekere/gaplib.git"
-ARG S390X_RUNNER_REPO_REV=f5085ab2e51fad20329b441f3c5475c50e4ea1bd
-ARG S390X_PATCH=build-files/runner-sdk-8.patch
+ARG S390X_RUNNER_REPO="https://github.com/ppc64le/gaplib.git"
+ARG S390X_RUNNER_REPO_REV=main
+ARG S390X_PATCH=patches/runner-main-sdk8-s390x.patch
 
 ARG RUNNER_REPO="https://github.com/actions/runner"
 ARG RUNNER_VERSION
