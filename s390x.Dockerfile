@@ -22,10 +22,12 @@ RUN git checkout ${S390X_RUNNER_REPO_REV}
 # RUN cp build-files/99synaptics /etc/apt/apt.conf.d/
 # RUN cp build-files/01-nodoc /etc/dpkg/dpkg.cfg.d/
 RUN cp ${S390X_PATCH} /opt/runner.patch
+COPY 0001-Fix-TestRunnerJobRequestMessageFromRunService_AuthMi.patch /opt/test.patch
 
 RUN git clone -b v${RUNNER_VERSION} ${RUNNER_REPO} /opt/runner
 WORKDIR /opt/runner
 RUN git apply /opt/runner.patch
+RUN git apply /opt/test.patch
 
 # dotnet refuses to build if global.json version and dotnet version don't match
 # it's difficult to get the right version of dotnet on s390x (the best way is to build it)
