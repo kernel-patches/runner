@@ -1,13 +1,13 @@
 # Self-Hosted IBM Z Github Actions Runner
 
-ARG RUNNER_VERSION=2.323.0
+ARG RUNNER_VERSION=2.324.0
 
 FROM ubuntu:noble AS build-s390x-runner-binaries
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG S390X_RUNNER_REPO="https://github.com/anup-kodlekere/gaplib.git"
-ARG S390X_RUNNER_REPO_REV=f5085ab2e51fad20329b441f3c5475c50e4ea1bd
-ARG S390X_PATCH=build-files/runner-sdk-8.patch
+ARG S390X_RUNNER_REPO="https://github.com/ppc64le/gaplib.git"
+ARG S390X_RUNNER_REPO_REV=main
+ARG S390X_PATCH=patches/runner-main-sdk8-s390x.patch
 
 ARG RUNNER_REPO="https://github.com/actions/runner"
 ARG RUNNER_VERSION
@@ -22,10 +22,12 @@ RUN git checkout ${S390X_RUNNER_REPO_REV}
 # RUN cp build-files/99synaptics /etc/apt/apt.conf.d/
 # RUN cp build-files/01-nodoc /etc/dpkg/dpkg.cfg.d/
 RUN cp ${S390X_PATCH} /opt/runner.patch
+COPY 0001-Fix-TestRunnerJobRequestMessageFromRunService_AuthMi.patch /opt/test.patch
 
 RUN git clone -b v${RUNNER_VERSION} ${RUNNER_REPO} /opt/runner
 WORKDIR /opt/runner
 RUN git apply /opt/runner.patch
+RUN git apply /opt/test.patch
 
 # dotnet refuses to build if global.json version and dotnet version don't match
 # it's difficult to get the right version of dotnet on s390x (the best way is to build it)
