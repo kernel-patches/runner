@@ -19,6 +19,8 @@ RUN apt-get -y install dotnet-sdk-8.0
 RUN git clone ${S390X_RUNNER_REPO} /opt/s390x-runner
 WORKDIR /opt/s390x-runner
 RUN git checkout ${S390X_RUNNER_REPO_REV}
+# RUN cp build-files/99synaptics /etc/apt/apt.conf.d/
+# RUN cp build-files/01-nodoc /etc/dpkg/dpkg.cfg.d/
 RUN cp ${S390X_PATCH} /opt/runner.patch
 COPY 0001-Fix-TestRunnerJobRequestMessageFromRunService_AuthMi.patch /opt/test.patch
 
@@ -47,11 +49,18 @@ ARG RUNNER_HOME=/actions-runner
 ARG RUNNER_VERSION
 
 RUN apt-get update -y
-RUN apt-get -y install curl git gnupg lsb-release software-properties-common sudo wget
-COPY setup-build-env.sh /tmp/setup-build-env.sh
-RUN /tmp/setup-build-env.sh
+RUN apt-get install -y \
+    bc bison build-essential cmake cpu-checker curl dumb-init elfutils ethtool flex g++ gawk git \
+    iproute2 iptables iputils-ping jq keyutils libguestfs-tools python3-minimal python3-docutils \
+    rsync software-properties-common sudo tree wget xz-utils zstd
+RUN apt-get install -y \
+    binutils-dev libcap-dev libdw-dev libelf-dev libssl-dev ncurses-dev
+RUN apt-get install -y \
+    qemu-guest-agent qemu-kvm qemu-system-arm qemu-system-s390x qemu-system-x86 qemu-utils
+RUN apt-get install -y aspnetcore-runtime-8.0
 
-RUN apt-get -y install aspnetcore-runtime-8.0
+# Install LLVM with automatic script (https://apt.llvm.org)
+RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
 RUN apt-get clean
 
