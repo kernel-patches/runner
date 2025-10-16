@@ -59,9 +59,6 @@ RUN curl -Lf https://raw.githubusercontent.com/myoung34/docker-github-actions-ru
 # RUN curl -Lf https://raw.githubusercontent.com/myoung34/docker-github-actions-runner/${RUNNER_VERSION}/token.sh -o /token.sh && chmod 755 /token.sh
 COPY token.sh /token.sh
 
-COPY setup-mirror-repos.sh /tmp/setup-mirror-repos.sh
-RUN bash /tmp/setup-mirror-repos.sh
-
 RUN useradd -d ${RUNNER_HOME} -m runner
 RUN echo "runner ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
 RUN echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >>/etc/sudoers
