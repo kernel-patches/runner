@@ -45,7 +45,12 @@ ARG RUNNER_HOME=/actions-runner
 ARG RUNNER_VERSION
 
 RUN apt-get update -y
-RUN apt-get -y install curl dumb-init git gnupg lsb-release software-properties-common sudo wget
+# see https://github.com/myoung34/docker-github-actions-runner/blob/master/build/install_base.sh#L5
+RUN apt-get install -y --no-install-recommends \ 
+    apt-transport-https ca-certificates curl dirmngr dumb-init git gnupg \
+    gosu gpg-agent jq libc-bin locales lsb-release                       \ 
+    software-properties-common sudo tar unzip wget zip
+
 COPY install-dependencies.sh /tmp/install-dependencies.sh
 RUN /tmp/install-dependencies.sh
 
