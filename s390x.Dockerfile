@@ -49,7 +49,7 @@ RUN apt-get update -y
 RUN apt-get install -y --no-install-recommends \ 
     apt-transport-https ca-certificates curl dirmngr dumb-init git gnupg \
     gosu gpg-agent jq libc-bin locales lsb-release                       \ 
-    software-properties-common sudo tar unzip wget zip
+    software-properties-common sudo tar unzip wget zip zstd
 
 COPY install-dependencies.sh /tmp/install-dependencies.sh
 RUN /tmp/install-dependencies.sh
