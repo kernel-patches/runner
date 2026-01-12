@@ -1,6 +1,6 @@
 # Self-Hosted IBM Z Github Actions Runner
 
-ARG RUNNER_VERSION=2.330.0
+ARG RUNNER_VERSION=2.331.0
 
 FROM ubuntu:noble AS build-s390x-runner-binaries
 ENV DEBIAN_FRONTEND=noninteractive
