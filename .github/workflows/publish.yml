@@ -11,13 +11,9 @@ on:
   push:
     branches:
       - main
-      - staging
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   pull_request:
     branches:
       - main
-      - staging
   workflow_dispatch:
 
 env:
@@ -25,12 +21,13 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  LIBBPF_CI_TAG: v4
+  RUNNER_VERSION: 2.331.0
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    name: ${{ matrix.tag }}
+    runs-on: ${{ matrix.runs_on }}
     permissions:
       contents: read
       packages: write
@@ -38,23 +35,43 @@ jobs:
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
     strategy:
+      fail-fast: false
       matrix:
-        ubuntu_version: [noble]
-        arch: [s390x, aarch64, x86_64]
         include:
-          - arch: s390x
-            dockerfile: s390x.Dockerfile
-            platform: linux/s390x
-          - arch: aarch64
-            dockerfile: Dockerfile
-            platform: linux/arm64
           - arch: x86_64
             dockerfile: Dockerfile
             platform: linux/amd64
+            tag: main-noble-x86_64
+            runs_on: ubuntu-latest
+
+          - arch: aarch64
+            dockerfile: Dockerfile
+            platform: linux/arm64
+            tag: main-noble-aarch64
+            runs_on: ubuntu-24.04-arm
+
+          - arch: s390x
+            dockerfile: s390x.Dockerfile
+            platform: linux/s390x
+            tag: main-noble-s390x
+            runs_on: ubuntu-latest
+
+          - arch: x86_64
+            dockerfile: kbuilder-debian.Dockerfile
+            platform: linux/amd64
+            tag: kbuilder-debian-x86_64
+            runs_on: ubuntu-latest
+
+          - arch: aarch64
+            dockerfile: kbuilder-debian.Dockerfile
+            platform: linux/arm64
+            tag: kbuilder-debian-aarch64
+            runs_on: ubuntu-24.04-arm
 
     steps:
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -66,9 +83,8 @@ jobs:
         run: cosign version
 
       - name: Set up QEMU
+        if: matrix.arch == 's390x'
         uses: docker/setup-qemu-action@v3
-        with:
-          image: tonistiigi/binfmt:qemu-v9.2.2
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
@@ -83,27 +99,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=auto
-            prefix=
-            suffix=-${{ matrix.ubuntu_version }}-${{ matrix.arch }}
-          tags: |
-            # Generate old tag names (e.g main-s390x, main-x86_64...) when building noble
-            # branch event
-            type=ref,enable=${{ matrix.ubuntu_version == 'noble' }},suffix=-${{ matrix.arch }},event=branch
-            # pr event
-            type=ref,enable=${{ matrix.ubuntu_version == 'noble' }},prefix=pr-,suffix=-${{ matrix.arch }},event=pr
-            # tags for all pr/branches
-            type=ref,event=branch,enable=true,priority=600
-            type=ref,event=pr,enable=true,prefix=pr-,priority=600
-
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -113,10 +108,11 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
           platforms: ${{ matrix.platform }}
-          build-args: UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+          build-args: |
+            LIBBPF_CI_TAG=${{ env.LIBBPF_CI_TAG }}
+            RUNNER_VERSION=${{ env.RUNNER_VERSION }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
@@ -127,7 +123,6 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: "true"
-          TAGS: ${{ steps.meta.outputs.tags }}
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
-        run: cosign sign --yes ${TAGS}
+        run: cosign sign --yes ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}

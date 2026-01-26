@@ -52,7 +52,7 @@ RUN apt-get install -y --no-install-recommends \
     software-properties-common sudo tar unzip wget zip zstd
 
 COPY install-dependencies.sh /tmp/install-dependencies.sh
-RUN /tmp/install-dependencies.sh
+RUN /tmp/install-dependencies.sh run
 
 RUN apt-get -y install aspnetcore-runtime-8.0
 
