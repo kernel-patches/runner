@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
-mkdir -p /libbpfci/mirrors
-git clone https://github.com/kernel-patches/bpf.git /libbpfci/mirrors/linux
-chmod -R a+rX /libbpfci/mirrors
+MIRRORS_PATH=${MIRRORS_PATH:-/libbpfci/mirrors}
+
+mkdir -p "$MIRRORS_PATH"
+git clone https://github.com/kernel-patches/bpf.git "$MIRRORS_PATH/linux"
+chmod -R a+rX "$MIRRORS_PATH"
