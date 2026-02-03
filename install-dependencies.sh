@@ -29,6 +29,8 @@ git clone --depth 1 --branch $LIBBPF_CI_TAG https://github.com/libbpf/ci.git act
 if [ "$DEPS" = "all" ] || [ "$DEPS" = "build" ]; then
         # do not install cross-compilation toolchain by default
         export TARGET_ARCH=$(uname -m)
+        # do not install pahole by default
+        export PAHOLE_BRANCH="none"
         cd "${scratch}/actions/setup-build-env" && ./action.sh
 fi
 
