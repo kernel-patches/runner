@@ -1,4 +1,4 @@
-FROM debian:experimental
+FROM debian:testing
 
 ARG RUNNER_VERSION=2.331.0
 ARG LIBBPF_CI_TAG=v4
