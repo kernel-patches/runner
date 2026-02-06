@@ -1,6 +1,8 @@
 name: Build AI review image
 
 on:
+  schedule:
+    - cron: '00 13 * * *'
   push:
     branches:
       - main
