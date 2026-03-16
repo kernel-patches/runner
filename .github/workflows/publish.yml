@@ -22,7 +22,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   LIBBPF_CI_TAG: v4
-  RUNNER_VERSION: 2.331.0
+  RUNNER_VERSION: 2.332.0
 
 jobs:
   build:
