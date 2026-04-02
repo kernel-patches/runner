@@ -1,7 +1,7 @@
 name: RUNNER_VERSION bump
 
 # This workflow pulls the latest official actions runner version using GH API
-# and update RUNNER_VERSION variable.
+# and update RUNNER_VERSION file in the repo root.
 # If a change happens, the change will be commited in a versioned branch and
 # a PR will be created. Upon merging, the branch will be deleted.
 #
@@ -35,9 +35,8 @@ jobs:
           echo "ACTIONS_VERSION=${ACTIONS_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Update release
-        id: bump
         run: |
-          sed -i 's#RUNNER_VERSION:.*#RUNNER_VERSION: ${{ steps.release.outputs.ACTIONS_VERSION }}#' .github/workflows/publish.yml
+          echo "${{ steps.release.outputs.ACTIONS_VERSION }}" > RUNNER_VERSION
 
       - name: Create Pull Request
         env:

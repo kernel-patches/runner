@@ -22,7 +22,6 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   LIBBPF_CI_TAG: v4
-  RUNNER_VERSION: 2.332.0
 
 jobs:
   build:
@@ -72,6 +71,9 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v6
+
+      - name: Read RUNNER_VERSION
+        run: echo "RUNNER_VERSION=$(cat RUNNER_VERSION)" >> $GITHUB_ENV
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
