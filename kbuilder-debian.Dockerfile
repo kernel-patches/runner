@@ -3,6 +3,7 @@ FROM debian:testing
 ARG RUNNER_VERSION=2.331.0
 ARG LIBBPF_CI_TAG=v4
 
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
