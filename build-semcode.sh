@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 SEMCODE_ORIGIN=${SEMCODE_ORIGIN:-https://github.com/facebookexperimental/semcode.git}
-SEMCODE_REVISION=${SEMCODE_REVISION:-deff3e301bc558fae8ad3689a70e1f6ab4993f91}
+SEMCODE_REVISION=${SEMCODE_REVISION:-main}
 SEMCODE_SRC=${SEMCODE_SRC:-/tmp/semcode}
 
 sudo apt-get install -y build-essential libclang-dev protobuf-compiler libprotobuf-dev libssl-dev pkg-config
