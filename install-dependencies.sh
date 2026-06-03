@@ -9,10 +9,11 @@ export DEPS=${1:-"all"} # "build", "run" or "all"
 export LIBBPF_CI_TAG=${LIBBPF_CI_TAG:-"v4"}
 export RUNNER_VERSION=${RUNNER_VERSION:-2.331.0}
 
-# These should correspond to https://github.com/kernel-patches/vmtest/blob/master/.github/scripts/matrix.py#L20-L21
+# These should correspond to the DEFAULT_GCC_VERSION / DEFAULT_LLVM_VERSION in
+# https://github.com/kernel-patches/vmtest/blob/master/.github/scripts/matrix.py
 # Otherwise there is no point in caching the dependencies in the image
 export GCC_VERSION=${GCC_VERSION:-15}
-export LLVM_VERSION=${LLVM_VERSION:-21}
+export LLVM_VERSION=${LLVM_VERSION:-22}
 
 scratch=$(mktemp -d)
 cd $scratch
